@@ -3,86 +3,99 @@ import { Link, useNavigate } from "react-router-dom";
 import Badge from "react-bootstrap/Badge";
 import Modal from "../Modal";
 import Cart from "../screens/Cart";
+import { Navbar, Nav, Container, Button, Offcanvas } from "react-bootstrap";
 
-export default function Navbar() {
+export default function ResponsiveNavbar() {
   const [cartView, setCartView] = useState(false);
+  const [showMenu, setShowMenu] = useState(false); // For mobile menu toggle
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/login");
+    setShowMenu(false);
   };
 
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-success">
-        <div className="container-fluid">
-          <Link className="navbar-brand fs-1 fst-italic" to="/">
+    <>
+      {/* ✅ Bootstrap Responsive Navbar */}
+      <Navbar expand="lg" bg="success" variant="dark" className="fixed-top">
+        <Container>
+          <Navbar.Brand as={Link} to="/" className="fs-1 fst-italic">
             <b>FoodSpot</b>
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav me-auto mb-2">
-              <li className="nav-item">
-                <Link className="nav-link active fs-5" aria-current="page" to="/">
-                  Home
-                </Link>
-              </li>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={() => setShowMenu(true)} />
+          <Navbar.Collapse id="navbarNav" className="justify-content-end d-none d-lg-flex">
+            <Nav>
+              <Nav.Link as={Link} to="/" className="fs-5">Home</Nav.Link>
 
               {localStorage.getItem("authToken") && (
-                <li className="nav-item">
-                  <Link className="nav-link active fs-5" to="/">
-                    My Orders
-                  </Link>
-                </li>
+                <Nav.Link as={Link} to="/orders" className="fs-5">My Orders</Nav.Link>
               )}
-            </ul>
 
-            {/* ✅ Move Login, Signup, Cart, and Logout buttons inside the collapsible div */}
-            <div className="d-flex flex-column flex-lg-row align-items-lg-center">
               {!localStorage.getItem("authToken") ? (
-                <div className="d-flex">
-                  <Link className="btn bg-black text-success mx-1" to="/login">
+                <>
+                  <Button as={Link} to="/login" variant="dark" className="text-success mx-2">
                     Login
-                  </Link>
-                  <Link className="btn bg-black text-success mx-1" to="/createuser">
+                  </Button>
+                  <Button as={Link} to="/createuser" variant="dark" className="text-success mx-2">
                     SignUp
-                  </Link>
-                </div>
+                  </Button>
+                </>
               ) : (
-                <div className="d-flex">
-                  <button
-                    className="btn bg-black text-success mx-2"
-                    onClick={() => setCartView(true)}
-                  >
-                    My Cart{" "}
-                    <Badge pill bg="danger">
-                      2
-                    </Badge>
-                  </button>
-                  {cartView ? <Modal onClose={() => setCartView(false)}><Cart /></Modal> : null}
-                  
-                  <button className="btn bg-black text-danger mx-2" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
+                <>
+                  <Button variant="dark" className="text-success mx-2" onClick={() => setCartView(true)}>
+                    My Cart <Badge pill bg="danger">2</Badge>
+                  </Button>
+                  {cartView && <Modal onClose={() => setCartView(false)}><Cart /></Modal>}
 
-          </div>
-        </div>
-      </nav>
-    </div>
+                  <Button variant="dark" className="text-danger mx-2" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      {/* ✅ Offcanvas Mobile Sidebar Menu */}
+      <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} placement="start" style={{ backgroundColor: "#1a1a2e", color: "white" }}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title><b>Menu</b></Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Nav className="flex-column">
+            <Nav.Link as={Link} to="/" className="fs-5" onClick={() => setShowMenu(false)}>Home</Nav.Link>
+
+            {localStorage.getItem("authToken") && (
+              <Nav.Link as={Link} to="/orders" className="fs-5" onClick={() => setShowMenu(false)}>My Orders</Nav.Link>
+            )}
+
+            {!localStorage.getItem("authToken") ? (
+              <>
+                <Button as={Link} to="/login" variant="dark" className="text-success my-2 w-100" onClick={() => setShowMenu(false)}>
+                  Login
+                </Button>
+                <Button as={Link} to="/createuser" variant="dark" className="text-success my-2 w-100" onClick={() => setShowMenu(false)}>
+                  SignUp
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="dark" className="text-success my-2 w-100" onClick={() => { setCartView(true); setShowMenu(false); }}>
+                  My Cart <Badge pill bg="danger">2</Badge>
+                </Button>
+                {cartView && <Modal onClose={() => setCartView(false)}><Cart /></Modal>}
+
+                <Button variant="dark" className="text-danger my-2 w-100" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            )}
+          </Nav>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
   );
 }
