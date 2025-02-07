@@ -29,7 +29,7 @@ export default function Signup() {
 
   return (
     <div style={{
-      background: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)), url('/assets/pizza.jpeg') no-repeat center center/cover",
+      background: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)), url('/pizza.jpeg') no-repeat center center/cover",
       height: "100vh",
       display: "flex",
       alignItems: "center",
