@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: foodspot_backend
+    runtime: node
+    repo: https://github.com/harshu-x/FoodSpt_App/tree/main/backend
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: MONGO_URI
+        value: "mongodb+srv://harshalpetkar07:petkar321@cluster0.icwov.mongodb.net/FOODDSPOT?retryWrites=true&w=majority&appName=Cluster0";
+      - key: JWT_SECRET
+        value: "MyNameisHarshalPetkar"
