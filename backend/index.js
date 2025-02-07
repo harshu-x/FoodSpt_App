@@ -6,7 +6,7 @@ const mongoDB = require("./db");
 mongoDB();
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://foodspot-ot87.onrender.com");
+  res.setHeader("Access-Control-Allow-Origin", "https://food-spt-app.vercel.app/");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
