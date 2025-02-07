@@ -1,15 +1,17 @@
 const express = require("express");
+const cors = require("cors");  // ✅ Import CORS middleware
 const app = express();
 const port = process.env.PORT || 5000;
 const mongoDB = require("./db");
 
 mongoDB();
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://food-spt-app.vercel.app/");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// ✅ Use CORS middleware properly
+app.use(cors({
+  origin: "https://food-spt-app.vercel.app", // ✅ Corrected URL (NO TRAILING `/`)
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
+}));
 
 app.use(express.json());
 
